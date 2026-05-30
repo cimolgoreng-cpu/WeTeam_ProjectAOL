@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEteam - Academic Project Management System</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>WEteam</h1>
+                    <p>Project Portal • Sesi 2024</p>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="menu-item active" data-target="dashboard-view">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="menu-item" data-target="projects-view">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <span>Projects</span>
+                    </li>
+                    <li class="menu-item" data-target="create-project-view">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>Buat Proyek Baru</span>
+                    </li>
+                    <li class="menu-item" data-target="analytics-view">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Analytics</span>
+                    </li>
+                    <li class="menu-item" data-target="team-view">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Team</span>
+                    </li>
+                    <li class="menu-item" data-target="milestones-view">
+                        <i class="fa-solid fa-calendar-check"></i>
+                        <span>Milestones</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="menu-item">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
+                </div>
+                <div class="menu-item logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN WORKSPACE -->
+        <main class="main-content">
+            <!-- TOP BAR -->
+            <header class="topbar">
+                <div class="page-title-area">
+                    <h2 id="current-view-title">Dasbor Mahasiswa - Kolaborasi Tim</h2>
+                </div>
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Cari proyek, materi, tugas...">
+                    </div>
+                    <div class="icon-button">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="badge"></span>
+                    </div>
+                    <div class="icon-button">
+                        <i class="fa-solid fa-circle-question"></i>
+                    </div>
+                    <div class="user-profile">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="User Avatar">
+                    </div>
+                </div>
+            </header>
+
+            <!-- CANVAS FOR VIEWS -->
+            <div class="workspace-canvas">
+                
+                <!-- VIEW 1: DASHBOARD (Combining Screen 2 and Screen 3 elements) -->
+                <section id="dashboard-view" class="view-section active">
+                    <!-- Top Summary Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Rata-rata Nilai Tim</span>
+                                <span class="stat-icon-wrapper blue"><i class="fa-solid fa-arrow-trend-up"></i></span>
+                            </div>
+                            <div class="stat-value">3.85</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 77%;"></div>
+                            </div>
+                            <div class="stat-footer text-success">
+                                <i class="fa-solid fa-caret-up"></i> Meningkat 5% dari semester lalu
+                            </div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Proyek Aktif</span>
+                                <span class="stat-icon-wrapper orange"><i class="fa-solid fa-clipboard-list"></i></span>
+                            </div>
+                            <div class="stat-value">04</div>
+                            <div class="avatar-group">
+                                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=50&q=80" alt="Member">
+                                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=50&q=80" alt="Member">
+                                <div class="avatar-placeholder">+3</div>
+                            </div>
+                            <div class="stat-footer">2 proyek mendekati tenggat waktu</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Tugas Selesai</span>
+                                <span class="stat-icon-wrapper teal"><i class="fa-solid fa-circle-check"></i></span>
+                            </div>
+                            <div class="stat-value">24<span class="value-total">/30</span></div>
+                            <div class="status-chip success">Sangat Baik</div>
+                            <div class="stat-footer">80% Progress — 6 tugas tersisa minggu ini</div>
+                        </div>
+                    </div>
+
+                    <!-- Main Dashboard Content Split -->
+                    <div class="dashboard-split">
+                        <!-- Left Block: Proyek Sedang Berjalan -->
+                        <div class="split-left">
+                            <div class="section-header-inline">
+                                <h3>Proyek Sedang Berjalan</h3>
+                                <div class="action-buttons">
+                                    <button class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+                                    <button class="btn btn-ghost"><i class="fa-solid fa-sort"></i> Urutkan</button>
+                                </div>
+                            </div>
+
+                            <div class="project-cards-grid">
+                                <div class="project-card" onclick="switchView('projects-view')">
+                                    <div class="card-top">
+                                        <span class="badge-category tech">Ilmu Komputer</span>
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </div>
+                                    <h4>Pengembangan Sistem AI</h4>
+                                    <p>Membangun model prediksi cuaca berbasis Neural Networks untuk data agrikultur lokal.</p>
+                                    <div class="project-progress-area">
+                                        <div class="progress-info">
+                                            <span>Progres Keseluruhan</span>
+                                            <span>75%</span>
+                                        </div>
+                                        <div class="progress-bar-container">
+                                            <div class="progress-bar" style="width: 75%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="avatar-group">
+                                            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=50&q=80" alt="Member">
+                                            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=50&q=80" alt="Member">
+                                        </div>
+                                        <div class="due-date">Tenggat Waktu: <strong>15 Des 2024</strong></div>
+                                    </div>
+                                </div>
+
+                                <div class="project-card">
+                                    <div class="card-top">
+                                        <span class="badge-category business">Manajemen Bisnis</span>
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </div>
+                                    <h4>Analisis Pasar Startup</h4>
+                                    <p>Studi kelayakan dan strategi penetrasi pasar untuk platform e-commerce berkelanjutan.</p>
+                                    <div class="project-progress-area">
+                                        <div class="progress-info">
+                                            <span>Progres Keseluruhan</span>
+                                            <span>40%</span>
+                                        </div>
+                                        <div class="progress-bar-container">
+                                            <div class="progress-bar" style="width: 40%;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="avatar-group">
+                                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=50&q=80" alt="Member">
+                                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=50&q=80" alt="Member">
+                                        </div>
+                                        <div class="due-date">Tenggat Waktu: <strong>22 Nov 2024</strong></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Milestone Student Table (From Screen 2) -->
+                            <div class="table-section-wrapper">
+                                <div class="section-header-inline">
+                                    <h3>Milestone Mahasiswa</h3>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-ghost"><i class="fa-solid fa-filter"></i> Filter</button>
+                                        <button class="btn btn-secondary-outline small"><i class="fa-solid fa-download"></i> Export Data</button>
+                                    </div>
+                                </div>
+                                <div class="table-container">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Mahasiswa</th>
+                                                <th>NIM</th>
+                                                <th>Tugas Terakhir</th>
+                                                <th>Batas Waktu</th>
+                                                <th>Nilai Sementara</th>
+                                                <th>Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-user">
+                                                        <span class="avatar-circle-sm blue">B</span>
+                                                        <span>Budi Darmawan</span>
+                                                    </div>
+                                                </td>
+                                                <td>20210801001</td>
+                                                <td>Laporan Kemajuan 2</td>
+                                                <td>12 Okt 2024</td>
+                                                <td><strong>88/100</strong></td>
+                                                <td><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-user">
+                                                        <span class="avatar-circle-sm teal">S</span>
+                                                        <span>Susi Susanti</span>
+                                                    </div>
+                                                </td>
+                                                <td>20210801045</td>
+                                                <td>Implementasi Database</td>
+                                                <td>15 Okt 2024</td>
+                                                <td><strong>82/100</strong></td>
+                                                <td><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-user">
+                                                        <span class="avatar-circle-sm orange">A</span>
+                                                        <span>Anton Wijaya</span>
+                                                    </div>
+                                                </td>
+                                                <td>20210801122</td>
+                                                <td>Uji Coba Sistem</td>
+                                                <td>10 Okt 2024</td>
+                                                <td><strong>75/100</strong></td>
+                                                <td><i class="fa-solid fa-ellipsis-vertical"></i></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Block: Milestones & Insights -->
+                        <div class="split-right">
+                            <div class="card panel-card">
+                                <h3>Milestones Mendatang</h3>
+                                <div class="timeline-list">
+                                    <div class="timeline-item urgent">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-content">
+                                            <h4>Pengajuan Proposal Bab 1-3</h4>
+                                            <p>Proyek Sistem AI</p>
+                                            <span class="timeline-time">Besok</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-content">
+                                            <h4>Finalisasi Desain Kuesioner</h4>
+                                            <p>Proyek Analisis Pasar</p>
+                                            <span class="timeline-time">3 Hari Lagi</span>
+                                        </div>
+                                    </div>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-content">
+                                            <h4>Presentasi Progress 1</h4>
+                                            <p>Fakultas Teknik</p>
+                                            <span class="timeline-time">10 Nov</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Grade Contribution Panel (From Screen 2) -->
+                            <div class="card panel-card">
+                                <h3>Grade Contribution Analysis</h3>
+                                <label class="field-label">Proyek Terpilih:</label>
+                                <div class="custom-select-wrapper">
+                                    <select class="form-control">
+                                        <option>Smart Grid Architecture</option>
+                                        <option>Data Privacy for Healthcare</option>
+                                    </select>
+                                </div>
+                                <div class="contribution-list">
+                                    <div class="contrib-item">
+                                        <span class="avatar-circle-sm blue">B</span>
+                                        <div class="contrib-details">
+                                            <div class="contrib-name-row">
+                                                <strong>Jason Darrell</strong>
+                                                <span>Kontribusi: 45%</span>
+                                            </div>
+                                            <p>Lead Developer</p>
+                                            <div class="progress-bar-container thin"><div class="progress-bar" style="width: 45%;"></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="contrib-item">
+                                        <span class="avatar-circle-sm teal">S</span>
+                                        <div class="contrib-details">
+                                            <div class="contrib-name-row">
+                                                <strong>Krisna Putrai</strong>
+                                                <span>Kontribusi: 35%</span>
+                                            </div>
+                                            <p>Documentation & Research</p>
+                                            <div class="progress-bar-container thin"><div class="progress-bar teal" style="width: 35%;"></div></div>
+                                        </div>
+                                    </div>
+                                    <div class="contrib-item">
+                                        <span class="avatar-circle-sm orange">A</span>
+                                        <div class="contrib-details">
+                                            <div class="contrib-name-row">
+                                                <strong>Qurotullail</strong>
+                                                <span>Kontribusi: 20%</span>
+                                            </div>
+                                            <p>Testing & QA</p>
+                                            <div class="progress-bar-container thin"><div class="progress-bar orange" style="width: 20%;"></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="quote-box">
+                                    <p>"Budi memiliki kontribusi tertinggi dalam pengkodean inti, sementara Susi memimpin manajemen literatur."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 2: DETAIL PROYEK / PROJECTS (Screen 4 Layout) -->
+                <section id="projects-view" class="view-section">
+                    <div class="project-detail-header">
+                        <div class="breadcrumb">
+                            Beranda / Proyek / <span>Detail Proyek Kelompok</span>
+                        </div>
+                        <div class="header-main-row">
+                            <div>
+                                <h2>Sistem Manajemen Data Akademik</h2>
+                                <p class="subtitle">Mata Kuliah: Rekayasa Perangkat Lunak II (RPL-02)</p>
+                            </div>
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary-outline">Edit Rencana</button>
+                                <button class="btn btn-primary">Kirim Laporan</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-split">
+                        <!-- Left Layout: Status & Task List -->
+                        <div class="split-left">
+                            <div class="card status-overview-card">
+                                <div class="status-main-row">
+                                    <div>
+                                        <h3>Status Proyek Keseluruhan</h3>
+                                        <p class="text-muted">Target penyelesaian: 15 Desember 2024</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="huge-percent">84%</div>
+                                        <span class="prediction-label">Prediksi Nilai: A-</span>
+                                    </div>
+                                </div>
+                                <div class="giant-progress-bar">
+                                    <div class="progress-fill-text">SELESAI</div>
+                                </div>
+                                <div class="mini-stats-row">
+                                    <div class="mini-box">
+                                        <span class="box-label">Tugas Selesai</span>
+                                        <span class="box-val">24/28</span>
+                                    </div>
+                                    <div class="mini-box">
+                                        <span class="box-label">Waktu Tersisa</span>
+                                        <span class="box-val highlight">12 Hari</span>
+                                    </div>
+                                    <div class="mini-box">
+                                        <span class="box-label">Hambatan</span>
+                                        <span class="box-val error-text">2 Isu</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Daftar Tugas & Milestone -->
+                            <div class="task-list-section">
+                                <div class="section-header-inline">
+                                    <h3>Daftar Tugas & Milestone</h3>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-icon-only"><i class="fa-solid fa-filter"></i></button>
+                                        <button class="btn btn-primary small-icon"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="task-group-title">FINALISASI IMPLEMENTASI</div>
+                                
+                                <div class="task-items-list">
+                                    <div class="task-item completed">
+                                        <div class="task-checkbox checked">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                        </div>
+                                        <div class="task-details">
+                                            <h4>Optimasi Database Indexing</h4>
+                                            <p>Diselesaikan oleh Muhammad Alif</p>
+                                        </div>
+                                        <span class="task-status-tag">Selesai</span>
+                                    </div>
+
+                                    <div class="task-item pending">
+                                        <div class="task-checkbox">
+                                            <i class="fa-regular fa-circle"></i>
+                                        </div>
+                                        <div class="task-details">
+                                            <h4>Testing Integrasi API Payment</h4>
+                                            <p>Ditugaskan ke Siti Pertiwi</p>
+                                        </div>
+                                        <span class="task-badge high-priority">High Priority</span>
+                                    </div>
+
+                                    <div class="task-item pending">
+                                        <div class="task-checkbox">
+                                            <i class="fa-regular fa-circle"></i>
+                                        </div>
+                                        <div class="task-details">
+                                            <h4>Finalisasi Dokumentasi Teknis</h4>
+                                            <p>Menunggu input dari semua anggota</p>
+                                        </div>
+                                        <span class="task-badge normal">Belum Mulai</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Layout: Team & Contribution Charts -->
+                        <div class="split-right">
+                            <div class="card panel-card">
+                                <div class="section-header-inline">
+                                    <h3>Tim Proyek</h3>
+                                    <button class="btn btn-icon-only text-primary"><i class="fa-solid fa-user-plus"></i></button>
+                                </div>
+                                <div class="team-list-stack">
+                                    <div class="team-member-row">
+                                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80" alt="Alif">
+                                        <div class="member-meta">
+                                            <strong>Muhammad Alif</strong>
+                                            <span>Lead Developer</span>
+                                        </div>
+                                        <span class="status-indicator active">Aktif</span>
+                                    </div>
+                                    <div class="team-member-row">
+                                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=80&q=80" alt="Siti">
+                                        <div class="member-meta">
+                                            <strong>Siti Pertiwi</strong>
+                                            <span>System Analyst</span>
+                                        </div>
+                                        <span class="status-indicator busy">Sibuk</span>
+                                    </div>
+                                    <div class="team-member-row">
+                                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=80&q=80" alt="Budi">
+                                        <div class="member-meta">
+                                            <strong>Budi Kusuma</strong>
+                                            <span>UI Designer</span>
+                                        </div>
+                                        <span class="status-indicator active">Aktif</span>
+                                    </div>
+                                </div>
+                                <button class="btn btn-secondary-outline full-width style-ghost-btn">Lihat Semua Kontribusi</button>
+                            </div>
+
+                            <div class="card panel-card">
+                                <h3>Analisis Kontribusi</h3>
+                                <div class="chart-bars-container">
+                                    <div class="chart-row">
+                                        <div class="chart-label-row">
+                                            <span>Muhammad Alif</span>
+                                            <strong>42 Commits</strong>
+                                        </div>
+                                        <div class="progress-bar-container"><div class="progress-bar" style="width: 85%;"></div></div>
+                                    </div>
+                                    <div class="chart-row">
+                                        <div class="chart-label-row">
+                                            <span>Siti Pertiwi</span>
+                                            <strong>28 Commits</strong>
+                                        </div>
+                                        <div class="progress-bar-container"><div class="progress-bar secondary" style="width: 58%;"></div></div>
+                                    </div>
+                                    <div class="chart-row">
+                                        <div class="chart-label-row">
+                                            <span>Budi Kusuma</span>
+                                            <strong>22 Commits</strong>
+                                        </div>
+                                        <div class="progress-bar-container"><div class="progress-bar teal" style="width: 45%;"></div></div>
+                                    </div>
+                                </div>
+
+                                <div class="weekly-activity-box">
+                                    <span class="activity-title">Aktivitas Tim (Minggu Ini)</span>
+                                    <div class="activity-metric">+12% vs Minggu Lalu</div>
+                                    <!-- Simple Visual SVG Column Chart -->
+                                    <div class="svg-chart-mock">
+                                        <div class="bar" style="height: 40%;"></div>
+                                        <div class="bar" style="height: 65%;"></div>
+                                        <div class="bar" style="height: 90%;"></div>
+                                        <div class="bar" style="height: 75%;"></div>
+                                        <div class="bar" style="height: 30%;"></div>
+                                        <div class="bar" style="height: 20%;"></div>
+                                        <div class="bar" style="height: 55%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 3: BUAT PROYEK BARU (Screen 1 Layout) -->
+                <section id="create-project-view" class="view-section">
+                    <div class="project-detail-header">
+                        <div class="breadcrumb">Proyek > <span>Buat Proyek Baru</span></div>
+                        <h2>Buat Proyek Baru</h2>
+                        <p class="subtitle">Lengkapi detail proyek riset atau akademik Anda untuk memulai kolaborasi.</p>
+                    </div>
+
+                    <div class="dashboard-split">
+                        <!-- Left Block: Form Details -->
+                        <div class="split-left">
+                            <div class="card form-container-card">
+                                <div class="card-header-with-icon">
+                                    <i class="fa-regular fa-file-lines text-primary"></i>
+                                    <h3>Informasi Proyek</h3>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="field-label mandatory">Judul Proyek</label>
+                                    <input type="text" class="form-control-underline" placeholder="Contoh: Analisis Kriptografi pada IoT">
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="field-label">Deskripsi Proyek</label>
+                                    <textarea class="form-control-box" rows="6" placeholder="Jelaskan tujuan, metodologi, dan output yang diharapkan..."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="card form-container-card">
+                                <div class="card-header-with-icon">
+                                    <i class="fa-solid fa-users text-primary"></i>
+                                    <h3>Tim Proyek</h3>
+                                </div>
+
+                                <div class="invite-member-row">
+                                    <div class="input-with-icon-wrapper">
+                                        <i class="fa-solid fa-at"></i>
+                                        <input type="text" class="form-control" placeholder="Masukkan ID atau Email Mahasiswa">
+                                    </div>
+                                    <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Tambah</button>
+                                </div>
+
+                                <div class="added-members-stack">
+                                    <div class="added-member-card">
+                                        <div class="member-info-side">
+                                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Arya">
+                                            <div>
+                                                <strong>Arya Mahendra (Ketua)</strong>
+                                                <p>arya.mahendra@university.ac.id</p>
+                                            </div>
+                                        </div>
+                                        <span class="badge-role-user">ANDA</span>
+                                    </div>
+
+                                    <div class="added-member-card">
+                                        <div class="member-info-side">
+                                            <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=80" alt="Siti">
+                                            <div>
+                                                <strong>Siti Laila</strong>
+                                                <p>siti.laila@university.ac.id</p>
+                                            </div>
+                                        </div>
+                                        <i class="fa-regular fa-trash-can text-danger action-del-btn"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Block: Status & Visibility Settings -->
+                        <div class="split-right">
+                            <div class="card panel-card">
+                                <h3>STATUS & AKSES</h3>
+                                
+                                <div class="setting-toggle-row">
+                                    <div class="toggle-details">
+                                        <i class="fa-solid fa-earth-americas"></i>
+                                        <span>Publik</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="setting-toggle-row">
+                                    <div class="toggle-details">
+                                        <i class="fa-solid fa-lock"></i>
+                                        <span>Privat</span>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                </div>
+
+                                <div class="divider-line"></div>
+                                <p class="helper-text-italic">Pastikan semua data sudah benar sebelum mempublikasikan proyek.</p>
+
+                                <button class="btn btn-primary full-width large-padding-btn">
+                                    <i class="fa-solid fa-rocket"></i> Buat Proyek
+                                </button>
+                                <button class="btn btn-secondary-outline full-width large-padding-btn margin-top-sm">
+                                    Simpan Draft
+                                </button>
+                            </div>
+
+                            <!-- Decorative Visual Feature card -->
+                            <div class="card visual-promo-card">
+                                <span class="promo-tag">RINGKASAN</span>
+                                <h3>Visualisasi Riset</h3>
+                                <p>Akses semua tools analisis data dalam satu dashboard terintegrasi.</p>
+                                <div class="promo-bg-glow"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- placeholder Views for generic menus -->
+                <section id="analytics-view" class="view-section">
+                    <div class="card p-lg text-center">
+                        <i class="fa-solid fa-chart-line size-xl text-primary mb-md"></i>
+                        <h3>Modul Analitik Riset</h3>
+                        <p class="text-muted">Halaman ini menampilkan metrik performa riset komprehensif, grafik kompilasi SKS, dan data mining dari dokumen repositori.</p>
+                    </div>
+                </section>
+
+                <section id="team-view" class="view-section">
+                    <div class="card p-lg text-center">
+                        <i class="fa-solid fa-users size-xl text-primary mb-md"></i>
+                        <h3>Daftar Direktori Anggota & Pembimbing</h3>
+                        <p class="text-muted">Kelola tim, pembimbing akademik, dan review kontribusi author/co-author secara instan.</p>
+                    </div>
+                </section>
+
+                <section id="milestones-view" class="view-section">
+                    <div class="card p-lg text-center">
+                        <i class="fa-solid fa-calendar-check size-xl text-primary mb-md"></i>
+                        <h3>Penjadwalan & Milestone Komparatif</h3>
+                        <p class="text-muted">Sinkronisasikan lini masa proyek dengan kalender akademik universitas untuk memitigasi keterlambatan submit proposal.</p>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
