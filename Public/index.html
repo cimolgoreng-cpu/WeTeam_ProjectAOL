@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Academic Nexus Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="brand">
+      <h1>Academic Nexus</h1>
+      <span>Session 2026</span>
+    </div>
+    <ul class="menu">
+      <li class="active" onclick="switchTab('workspace')">Dashboard Workspace</li>
+      <li onclick="switchTab('new-project-tab')">+ Buat Proyek Baru</li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <div class="header-panel">
+      <h2 id="page-title">Sistem Manajemen Data Akademik</h2>
+      <div class="role-switcher">
+        <label style="font-size: 12px; font-weight:700; margin-right:8px;">HAK AKSES:</label>
+        <select id="roleSelect" onchange="toggleRoleView()">
+          <option value="dosen">Dosen / Pengajar</option>
+          <option value="mahasiswa">Mahasiswa (Muhammad Alif)</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="workspace-view" class="grid-layout">
+      <div>
+        <div class="card">
+          <h3>Progres Kerja Grup</h3>
+          <div style="display:flex; justify-content:space-between; font-weight:600; font-size:14px;">
+            <span>Penyelesaian Status</span>
+            <span id="progress-text">0%</span>
+          </div>
+          <div class="progress-container">
+            <div id="project-progress-bar" class="progress-bar" style="width: 0%"></div>
+          </div>
+          <p id="project-obj-desc" style="font-size: 14px; margin-top: 12px; color: var(--secondary);"></p>
+        </div>
+
+        <div class="card view-dosen">
+          <h3>Evaluasi Anggota & Penilaian Mandiri</h3>
+          <div id="members-list-dosen"></div>
+        </div>
+
+        <div class="card view-mahasiswa" style="display: none;">
+          <h3>Unggah Kontribusi Baru</h3>
+          <form id="contribForm" onsubmit="submitContribution(event)">
+            <div class="form-group">
+              <label>Judul / Deskripsi Pekerjaan Komit</label>
+              <input type="text" id="contribTitle" placeholder="Contoh: Integrasi API Payment / Fix bug routing" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Kirim Kontribusi</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>Log Aktivitas Kontribusi Resmi</h3>
+          <div id="contributions-log" style="font-size: 14px;"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Tautan Undangan Anggota</h3>
+          <p style="font-size: 13px; color: var(--secondary);">Bagikan tautan ini agar mahasiswa lain dapat bergabung otomatis ke dalam grup proyek ini:</p>
+          <div id="invitationLink" class="invitation-box"></div>
+          <button class="btn btn-secondary" style="width:100%; margin-top:12px; padding:8px;" onclick="simulateInvitationClick()">Simulasi Klik Link Undangan</button>
+        </div>
+        
+        <div class="card">
+          <h3>Daftar Proyek Aktif</h3>
+          <div id="project-selector-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="new-project-view" class="card" style="display: none; max-width: 800px;">
+      <h3>Inisialisasi Pembuatan Proyek Baru</h3>
+      <form id="projectForm" onsubmit="createNewProject(event)">
+        <div class="form-group">
+          <label>Judul Proyek</label>
+          <input type="text" id="projName" placeholder="Contoh: Analisis Kriptografi pada IoT" required>
+        </div>
+        <div class="form-group">
+          <label>Deskripsi Proyek</label>
+          <textarea id="projDesc" rows="3" placeholder="Jelaskan detail proyek riset atau akademik..." required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Tujuan & Target Output</label>
+          <textarea id="projObj" rows="2" placeholder="Tujuan yang diharapkan..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Buat Proyek & Buka Workpage</button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    let currentProjectIndex = 0;
+    let allProjects = [];
+
+    async function loadProjects() {
+      const res = await fetch('/api/projects');
+      allProjects = await res.json();
+      renderActiveProject();
+      renderProjectList();
+    }
+
+    function renderActiveProject() {
+      if (allProjects.length === 0) return;
+      const proj = allProjects[currentProjectIndex];
+
+      document.getElementById('page-title').innerText = proj.name;
+      document.getElementById('project-progress-bar').style.width = proj.progress + '%';
+      document.getElementById('progress-text').innerText = proj.progress + '%';
+      document.getElementById('project-obj-desc').innerText = "Target: " + proj.objective;
+      document.getElementById('invitationLink').innerText = window.location.origin + "/api/projects/" + proj.id + "/join-link-simulation";
+
+      const logContainer = document.getElementById('contributions-log');
+      if(proj.contributions.length === 0) {
+        logContainer.innerHTML = "<p style='color:var(--outline)'>Belum ada kontribusi tertulis.</p>";
+      } else {
+        logContainer.innerHTML = proj.contributions.map(c => `
+          <div style="padding:8px 0; border-bottom:1px solid var(--surface-container)">
+            <strong>${c.memberName}</strong> menyisipkan: <em>"${c.title}"</em> <span style="font-size:11px; color:var(--outline)">(${c.date})</span>
+          </div>
+        `).join('');
+      }
+
+      const dosenList = document.getElementById('members-list-dosen');
+      dosenList.innerHTML = proj.members.map(m => {
+        let scoreView = '';
+        if (m.contributionsCount === 0) {
+          scoreView = `<span class="badge badge-zero">Nilai: 0 (Tidak ada kontribusi)</span>`;
+        } else if (m.score !== null) {
+          scoreView = `<span class="badge badge-scored">Nilai: ${m.score}</span>`;
+        } else {
+          scoreView = `
+            <div class="grading-action">
+              <input type="number" min="0" max="100" placeholder="Skor" id="score-input-${m.id}">
+              <button class="btn btn-primary" style="padding:6px 12px; font-size:12px" onclick="submitGrade('${m.id}')">Submit</button>
+            </div>
+          `;
+        }
+
+        return `
+          <div class="member-row">
+            <div>
+              <strong>${m.name}</strong> <span style="font-size:12px; color:var(--outline)">(${m.role})</span>
+              <br><span style="font-size:12px; color:var(--secondary)">Kontribusi: ${m.contributionsCount} kali commit</span>
+            </div>
+            <div>${scoreView}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderProjectList() {
+      const container = document.getElementById('project-selector-list');
+      container.innerHTML = allProjects.map((p, index) => `
+        <div style="padding:10px; margin-top:8px; border:1px solid var(--border-color); border-radius:4px; cursor:pointer; background:${index === currentProjectIndex ? '#efedf1': 'white'}" onclick="selectProject(${index})">
+          <strong style="font-size:14px; color:var(--primary);">${p.name}</strong>
+          <div class="progress-container" style="height:6px; margin:4px 0;"><div class="progress-bar" style="width:${p.progress}%"></div></div>
+        </div>
+      `).join('');
+    }
+
+    function selectProject(index) {
+      currentProjectIndex = index;
+      renderActiveProject();
+      renderProjectList();
+    }
+
+    function toggleRoleView() {
+      const role = document.getElementById('roleSelect').value;
+      if (role === 'dosen') {
+        document.querySelectorAll('.view-dosen').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.view-mahasiswa').forEach(el => el.style.display = 'none');
+      } else {
+        document.querySelectorAll('.view-dosen').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.view-mahasiswa').forEach(el => el.style.display = 'block');
+      }
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll('.menu li').forEach(li => li.classList.remove('active'));
+      if (tab === 'workspace') {
+        document.querySelector('.menu li:nth-child(1)').classList.add('active');
+        document.getElementById('workspace-view').style.display = 'grid';
+        document.getElementById('new-project-view').style.display = 'none';
+        renderActiveProject();
+      } else {
+        document.querySelector('.menu li:nth-child(2)').classList.add('active');
+        document.getElementById('workspace-view').style.display = 'none';
+        document.getElementById('new-project-view').style.display = 'block';
+      }
+    }
+
+    async function createNewProject(e) {
+      e.preventDefault();
+      const name = document.getElementById('projName').value;
+      const description = document.getElementById('projDesc').value;
+      const objective = document.getElementById('projObj').value;
+
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description, objective })
+      });
+
+      if (res.ok) {
+        document.getElementById('projectForm').reset();
+        await loadProjects();
+        currentProjectIndex = allProjects.length - 1;
+        switchTab('workspace');
+      }
+    }
+
+    async function submitContribution(e) {
+      e.preventDefault();
+      const title = document.getElementById('contribTitle').value;
+      const proj = allProjects[currentProjectIndex];
+
+      const res = await fetch(`/api/projects/${proj.id}/contributions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          memberId: "m1",
+          memberName: "Muhammad Alif",
+          title: title
+        })
+      });
+
+      if (res.ok) {
+        document.getElementById('contribForm').reset();
+        await loadProjects();
+      }
+    }
+
+    async function submitGrade(memberId) {
+      const proj = allProjects[currentProjectIndex];
+      const score = document.getElementById(`score-input-${memberId}`).value;
+      if (!score) return alert("Masukkan nilai terlebih dahulu");
+
+      const res = await fetch(`/api/projects/${proj.id}/grade`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ memberId, score: parseInt(score) })
+      });
+
+      if (res.ok) {
+        await loadProjects();
+      }
+    }
+
+    async function simulateInvitationClick() {
+      const proj = allProjects[currentProjectIndex];
+      const konfirmasi = confirm(`Tautan Undangan: Anda diundang bergabung ke grup proyek "${proj.name}". Apakah Anda bersedia bergabung?`);
+      
+      if (konfirmasi) {
+        const namaBaru = prompt("Masukkan nama Anda untuk bergabung:");
+        if (!namaBaru) return;
+
+        const res = await fetch(`/api/projects/${proj.id}/join`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: namaBaru, role: "Contributor" })
+        });
+
+        if (res.ok) {
+          alert("Berhasil bergabung ke grup!");
+          await loadProjects();
+        }
+      } else {
+        alert("Undangan ditolak.");
+      }
+    }
+
+    window.onload = loadProjects;
+  </script>
+</body>
+</html>
